@@ -1,19 +1,25 @@
 package com.theoxao.middleware
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.theoxao.entities.RouteEntity
+import com.theoxao.route.RouteHandler
+import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Configuration
 import org.springframework.data.redis.connection.MessageListener
-import org.springframework.data.redis.core.RedisTemplate
+import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.data.redis.listener.PatternTopic
 import org.springframework.data.redis.listener.RedisMessageListenerContainer
 import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor
-import org.springframework.stereotype.Component
 
 
 /**
  * create by theoxao on 2019/5/19
  */
-class RedisMessageListener(private val redisTemplate: RedisTemplate<Any, Any>) {
-
-    fun listen(channelFragment: String, handle: (body: String, channel: String, redisTemplate: RedisTemplate<Any, Any>) -> Unit) {
+@Configuration
+open class RedisMessageListener(private val redisTemplate: StringRedisTemplate) {
+    @Bean
+    open fun container(routeHandler: RouteHandler): RedisMessageListenerContainer {
+        val objectMapper = ObjectMapper()
         val container = RedisMessageListenerContainer()
         container.connectionFactory = redisTemplate.connectionFactory
         container.setTaskExecutor(ConcurrentTaskExecutor())
@@ -21,8 +27,23 @@ class RedisMessageListener(private val redisTemplate: RedisTemplate<Any, Any>) {
         container.addMessageListener(MessageListener { message, _ ->
             val body = String(message.body)
             val channel = String(message.channel)
-            handle(body, channel, redisTemplate)
+            println(channel)
+            when {
+                channel.contains("set") -> {
+                    val raw = redisTemplate.boundValueOps(body).get()
+                    val node = objectMapper.readTree(raw)
+                    val data = RouteEntity()
+                    data.id = node.findValue("id").asText()
+                    data.path = node.findValue("path").asText()
+                    data.script = node.findValue("script").asText()
+                    routeHandler.addRoute(data)
+                }
+                channel.contains("del") -> {
+                    routeHandler.removeRoute(body)
+                }
+            }
         }, topic)
+        return container
     }
 
 }
