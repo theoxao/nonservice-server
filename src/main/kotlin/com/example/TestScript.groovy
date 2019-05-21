@@ -1,21 +1,13 @@
 package com.example
 
-import com.theoxao.common.CommonResult
+
 import com.theoxao.common.ParamWrap
 
-import java.util.function.Consumer
+import java.util.concurrent.CompletableFuture
 
-
-static CommonResult service(ParamWrap paramWrap) {
-    def list = paramWrap.servicesHolder.mongoTemplate.findAll(User.class)
-    List<UserView> result = new ArrayList<>()
-    list.forEach(new Consumer<User>() {
-        @Override
-        void accept(User user) {
-            result.add(UserView.from(user))
-        }
-    })
-    new CommonResult(result)
+static CompletableFuture<?> service(ParamWrap paramWrap) {
+    CompletableFuture<String> future = paramWrap.servicesHolder.httpClient.getFuture("http://git.theoxao.com")
+    null
 }
 
 class UserView {

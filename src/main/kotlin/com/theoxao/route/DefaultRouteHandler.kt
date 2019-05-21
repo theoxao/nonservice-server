@@ -1,6 +1,5 @@
 package com.theoxao.route
 
-import com.theoxao.common.CommonResult
 import com.theoxao.common.ParamWrap
 import com.theoxao.service.GroovyScriptService
 import com.theoxao.service.ServicesHolder
@@ -9,10 +8,14 @@ import io.ktor.http.HttpMethod
 import io.ktor.response.respond
 import io.ktor.routing.*
 import io.ktor.server.engine.ApplicationEngine
+import io.ktor.server.netty.suspendAwait
 import io.ktor.util.AttributeKey
 import io.ktor.util.Attributes
 import io.ktor.util.pipeline.ContextDsl
+import io.netty.util.concurrent.CompleteFuture
+import kotlinx.coroutines.future.await
 import org.springframework.stereotype.Component
+import java.util.concurrent.CompletableFuture
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaField
 
@@ -40,10 +43,15 @@ class DefaultRouteHandler(
         applicationEngine.application.routing {
             markedRoute(routeData.path, routeData.method, routeData.id) {
                 handle {
-                    val result = scriptService.parse(routeData.script) {
-                        return@parse this.invokeMethod("service", ParamWrap(serviceHolder, call))
-                    } as CommonResult
-                    call.respond(result)
+                    call.respond(
+                            when (val result = scriptService.parse(routeData.script) {
+                                return@parse this.invokeMethod("service", ParamWrap(serviceHolder, call))
+                            }) {
+                                is CompletableFuture<*> -> result.await()
+                                is CompleteFuture<*> -> result.suspendAwait()
+                                else -> result
+                            }
+                    )
                 }
             }
         }
