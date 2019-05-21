@@ -7,6 +7,7 @@ import java.util.concurrent.CompletableFuture
 
 static CompletableFuture<?> service(ParamWrap paramWrap) {
     CompletableFuture<String> future = paramWrap.servicesHolder.httpClient.getFuture("http://git.theoxao.com")
+
     null
 }
 
