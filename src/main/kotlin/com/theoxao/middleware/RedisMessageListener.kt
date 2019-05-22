@@ -1,6 +1,7 @@
 package com.theoxao.middleware
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.theoxao.common.Constant.Companion.ROUTE_DATA_REDIS_PREFIX
 import com.theoxao.entities.RouteEntity
 import com.theoxao.route.RouteHandler
 import org.springframework.context.annotation.Bean
@@ -17,6 +18,7 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskExecutor
  */
 @Configuration
 open class RedisMessageListener(private val redisTemplate: StringRedisTemplate) {
+
     @Bean
     open fun container(routeHandler: RouteHandler): RedisMessageListenerContainer {
         val objectMapper = ObjectMapper()
@@ -27,10 +29,12 @@ open class RedisMessageListener(private val redisTemplate: StringRedisTemplate) 
         container.addMessageListener(MessageListener { message, _ ->
             val body = String(message.body)
             val channel = String(message.channel)
+            println(body)
             println(channel)
             when {
-                channel.contains("set") -> {
-                    val raw = redisTemplate.boundValueOps(body).get()
+                //use hash to store route data
+                channel.contains("hset") -> {
+                    val raw = redisTemplate.boundValueOps(ROUTE_DATA_REDIS_PREFIX + body).get()
                     val node = objectMapper.readTree(raw)
                     val data = RouteEntity()
                     data.id = node.findValue("id").asText()
@@ -38,7 +42,7 @@ open class RedisMessageListener(private val redisTemplate: StringRedisTemplate) 
                     data.script = node.findValue("script").asText()
                     routeHandler.addRoute(data)
                 }
-                channel.contains("del") -> {
+                channel.contains("hdel") -> {
                     routeHandler.removeRoute(body)
                 }
             }

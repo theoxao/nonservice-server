@@ -1,6 +1,7 @@
 package com.theoxao.repository
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.theoxao.common.Constant.Companion.ROUTE_DATA_REDIS_PREFIX
 import com.theoxao.entities.RouteEntity
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Repository
  */
 @Repository
 open class RouteRepositoryImpl(private val mongoTemplate: MongoTemplate,
-                          private val redisTemplate: StringRedisTemplate
+                               private val redisTemplate: StringRedisTemplate
 ) : RouteRepository {
 
     private val objectMapper = ObjectMapper()
@@ -30,7 +31,9 @@ open class RouteRepositoryImpl(private val mongoTemplate: MongoTemplate,
     }
 
     override fun save(route: RouteEntity) {
-        redisTemplate.boundValueOps(route.id).set(objectMapper.writeValueAsString(route))
+        if (redisTemplate.hasKey(ROUTE_DATA_REDIS_PREFIX + route.id)) throw RuntimeException("")
+        redisTemplate.boundValueOps(ROUTE_DATA_REDIS_PREFIX + route.id)
+                .set(objectMapper.writeValueAsString(route))     //TODO move this
         mongoTemplate.save(route)
     }
 
@@ -41,7 +44,7 @@ open class RouteRepositoryImpl(private val mongoTemplate: MongoTemplate,
     }
 
     override fun remove(id: String) {
-        redisTemplate.delete(id)
+        redisTemplate.delete(ROUTE_DATA_REDIS_PREFIX + id)
         mongoTemplate.remove(Query.query(Criteria.where("id").`is`(ObjectId(id))), RouteEntity::class.java)
     }
 }

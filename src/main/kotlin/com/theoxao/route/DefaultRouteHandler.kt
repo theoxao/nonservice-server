@@ -13,6 +13,7 @@ import io.ktor.util.AttributeKey
 import io.ktor.util.Attributes
 import io.ktor.util.pipeline.ContextDsl
 import io.netty.util.concurrent.CompleteFuture
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.future.await
 import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture

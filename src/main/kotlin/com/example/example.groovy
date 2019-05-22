@@ -8,9 +8,6 @@ import java.util.function.Function
 static CompletableFuture<CommonResult> service(ParamWrap paramWrap) {
     List<String> result = new ArrayList<String>()
     def localUserFuture = paramWrap.servicesHolder.httpClient.getFuture("http://git.theoxao.com")
-    localUserFuture.
-    localUserFuture.thenAcceptBoth()
-
     localUserFuture.thenApplyAsync(new Function<String, CommonResult>() {
         @Override
         CommonResult apply(String localUser) {
