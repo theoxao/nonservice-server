@@ -2,12 +2,13 @@ package com.example
 
 
 import com.theoxao.common.ParamWrap
+import com.theoxao.common.CommonResult
 
 static CommonResult service(ParamWrap paramWrap) async{
     List<String> result = new ArrayList<String>()
-    String localUser = await paramWrap.servicesHolder.httpClient.getFuture("http://git.theoxao.com")
+    String localUser = expect paramWrap.servicesHolder.httpClient.getFuture("http://git.theoxao.com")
     result.add(localUser)
-    String response = await paramWrap.servicesHolder.httpClient.getFuture("http://git.theoxao.com")
+    String response = expect paramWrap.servicesHolder.httpClient.getFuture("http://git.theoxao.com")
     def user = ObjectMapper().readValue(response, User.class)
     result.add(user)
     new CommonResult(result)

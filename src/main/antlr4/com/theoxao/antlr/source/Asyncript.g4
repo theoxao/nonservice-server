@@ -56,6 +56,7 @@ typeDeclaration
     |   classOrInterfaceModifier* enumDeclaration
     |   classOrInterfaceModifier* interfaceDeclaration
     |   classOrInterfaceModifier* annotationTypeDeclaration
+    |   classBodyDeclaration
     |   ';'
     ;
 
@@ -90,6 +91,7 @@ classDeclaration
         ('extends' typeType)?
         ('implements' typeList)?
         classBody
+    |   classBody
     ;
 
 typeParameters
@@ -166,6 +168,7 @@ methodDeclaration
     :   (typeType|'void') Identifier formalParameters ('[' ']')*
         ('throws' qualifiedNameList)?
         (   methodBody
+        |   asyncMethodBody
         |   ';'
         )
     ;
@@ -294,6 +297,10 @@ formalParameter
 
 lastFormalParameter
     :   variableModifier* typeType '...' variableDeclaratorId
+    ;
+
+asyncMethodBody
+    :   ASYNC (block)
     ;
 
 methodBody
@@ -494,11 +501,18 @@ constantExpression
     :   expression
     ;
 
+awaitExpression
+    : AWAIT (expression)
+    ;
+expectExpression
+    : EXPECT (expression)
+    ;
+
 expression
     :   primary
-    |   AWAIT expression
-    |   AWAITABLE expression
     |   expression '.' Identifier
+    |   expectExpression
+    |   awaitExpression
     |   expression '.' 'this'
     |   expression '.' 'new' nonWildcardTypeArguments? innerCreator
     |   expression '.' 'super' superSuffix
@@ -663,7 +677,7 @@ VOLATILE      : 'volatile';
 WHILE         : 'while';
 ASYNC         : 'async';
 AWAIT         : 'await';
-AWAITABLE     : 'awaitable';
+EXPECT        : 'expect';
 
 // §3.10.1 Integer Literals
 
@@ -1003,7 +1017,7 @@ ELLIPSIS : '...';
 // Whitespace and comments
 //
 
-WS  :  [ \t\r\n\u000C]+ -> skip
+WS  :  [ \t\u000C]+ -> skip
     ;
 
 COMMENT
