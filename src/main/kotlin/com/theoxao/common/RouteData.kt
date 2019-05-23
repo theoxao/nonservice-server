@@ -1,9 +1,5 @@
-package com.theoxao.route
+package com.theoxao.common
 
-import io.ktor.application.ApplicationCall
-import io.ktor.http.HttpMethod
-import io.ktor.util.pipeline.PipelineContext
-import io.ktor.util.pipeline.PipelineInterceptor
 import org.bson.types.ObjectId
 import org.intellij.lang.annotations.Language
 
@@ -20,14 +16,20 @@ open class BaseRouteData {
     /**
      * request method
      */
-    var method: HttpMethod = HttpMethod.Get
+    var method: String = "GET"
 
 
     @Language("Groovy")
     var script = ""
 
+    constructor()
 
-//    /**
+    constructor(id: String?, script: String) {
+        this.id = id
+        this.script = script
+    }
+
+    //    /**
 //     * handle the request
 //     */
 //    var handle: (PipelineContext<Unit, ApplicationCall>.() -> Unit)? = null

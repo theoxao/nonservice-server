@@ -1,8 +1,9 @@
-package com.theoxao.route
+package com.theoxao.service
 
+import com.theoxao.annotations.ShylyService
+import com.theoxao.common.BaseRouteData
+import com.theoxao.common.Constant.ROUTE_DATA_REDIS_PREFIX
 import com.theoxao.common.ParamWrap
-import com.theoxao.service.GroovyScriptService
-import com.theoxao.service.ServicesHolder
 import io.ktor.application.call
 import io.ktor.http.HttpMethod
 import io.ktor.response.respond
@@ -11,11 +12,11 @@ import io.ktor.server.engine.ApplicationEngine
 import io.ktor.server.netty.suspendAwait
 import io.ktor.util.AttributeKey
 import io.ktor.util.Attributes
+import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.pipeline.ContextDsl
 import io.netty.util.concurrent.CompleteFuture
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.future.await
-import org.springframework.stereotype.Component
+import org.springframework.util.Assert
 import java.util.concurrent.CompletableFuture
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaField
@@ -24,12 +25,15 @@ import kotlin.reflect.jvm.javaField
 /**
  * create by theoxao on 2019/5/18
  */
-@Component
-class DefaultRouteHandler(
+@ShylyService
+@KtorExperimentalAPI
+class DefaultRouteHandler constructor(
         private val applicationEngine: ApplicationEngine,
         private val scriptService: GroovyScriptService,
-        private val serviceHolder: ServicesHolder
+        private val serviceHolder: ServicesHolder,
+        private val routeCacheService: RouteCacheService
 ) : RouteHandler {
+
     private var baseRoute: Routing? = null
 
     init {
@@ -39,15 +43,16 @@ class DefaultRouteHandler(
         baseRoute = route as? Routing
     }
 
-
     override fun addRoute(routeData: BaseRouteData) {
+        routeCacheService.cache[routeData.id] = routeData
         applicationEngine.application.routing {
-            markedRoute(routeData.path, routeData.method, routeData.id) {
+            markedRoute(routeData.path, HttpMethod(routeData.method), routeData.id) {
                 handle {
                     call.respond(
-                            when (val result = scriptService.parse(routeData.script) {
+                            when (val result: Any? = scriptService.parse(routeCacheService.cache[routeData.id]!!.script) {
                                 return@parse this.invokeMethod("service", ParamWrap(serviceHolder, call))
                             }) {
+                                null -> throw RuntimeException("the script should not return null")
                                 is CompletableFuture<*> -> result.await()
                                 is CompleteFuture<*> -> result.suspendAwait()
                                 else -> result
@@ -72,8 +77,6 @@ class DefaultRouteHandler(
         }
 
     }
-
-
 }
 
 
@@ -96,7 +99,7 @@ fun Route.markedRoute(path: String, method: HttpMethod, value: String, build: Ro
     val selector = HttpMethodRouteSelector(method)
     val createRouteFromPath = createRouteFromPath(path)
     val child = createRouteFromPath.createChild(selector)
-    child.attributes.put(AttributeKey<String>(value), value)
+    child.attributes.put(AttributeKey<String>(value), ROUTE_DATA_REDIS_PREFIX + value)
     return child.apply(build)
 }
 

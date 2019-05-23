@@ -1,8 +1,6 @@
 package com.theoxao.entities
 
-import com.theoxao.route.BaseRouteData
-import org.bson.types.ObjectId
-import org.intellij.lang.annotations.Language
+import com.theoxao.common.BaseRouteData
 import org.springframework.data.mongodb.core.mapping.Document
 
 

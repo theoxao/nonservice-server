@@ -1,10 +1,8 @@
 package com.theoxao
 
-import com.theoxao.route.BaseRouteData
-import com.theoxao.route.DefaultRouteHandler
-import com.theoxao.service.GroovyScriptService
+import com.theoxao.common.BaseRouteData
+import com.theoxao.service.DefaultRouteHandler
 import org.bson.types.ObjectId
-import org.intellij.lang.annotations.Language
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

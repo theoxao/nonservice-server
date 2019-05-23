@@ -1,6 +1,7 @@
 package com.theoxao.service
 
 import com.theoxao.annotations.EmbeddedService
+import com.theoxao.annotations.ShylyService
 import com.theoxao.http.HttpClient
 import com.theoxao.wrap.HttpClientWrap
 import io.ktor.util.KtorExperimentalAPI
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service
  * @author theo
  * @date 2019/5/20
  */
-@Service
+@ShylyService
 @KtorExperimentalAPI
 class ServicesHolder constructor(
         val redisTemplate: StringRedisTemplate,

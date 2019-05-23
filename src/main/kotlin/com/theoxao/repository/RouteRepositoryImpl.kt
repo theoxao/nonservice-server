@@ -1,7 +1,7 @@
 package com.theoxao.repository
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.theoxao.common.Constant.Companion.ROUTE_DATA_REDIS_PREFIX
+import com.theoxao.common.Constant.ROUTE_DATA_REDIS_PREFIX
 import com.theoxao.entities.RouteEntity
 import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.Query
 import org.springframework.data.redis.core.StringRedisTemplate
 import org.springframework.stereotype.Repository
+import org.springframework.util.Assert
 
 
 /**
@@ -38,9 +39,12 @@ open class RouteRepositoryImpl(private val mongoTemplate: MongoTemplate,
     }
 
     override fun update(route: RouteEntity) {
+
     }
 
     override fun updateSelective(route: RouteEntity) {
+        Assert.notNull(route.id, "route id should null be null")
+
     }
 
     override fun remove(id: String) {

@@ -6,9 +6,7 @@ import com.theoxao.common.ParamWrap
 import java.util.concurrent.CompletableFuture
 
 static CompletableFuture<?> service(ParamWrap paramWrap) {
-    CompletableFuture<String> future = paramWrap.servicesHolder.httpClient.getFuture("http://git.theoxao.com")
-
-    null
+    paramWrap.servicesHolder.httpClient.getFuture("http://git.theoxao.com")
 }
 
 class UserView {
