@@ -48,13 +48,15 @@ class DefaultRouteHandler constructor(
         applicationEngine.application.routing {
             markedRoute(routeData.path, HttpMethod(routeData.method), routeData.id) {
                 handle {
+                    val result: Any? = scriptService.parse(routeCacheService.cache[routeData.id]!!.script) {
+                        return@parse this.invokeMethod("service", ParamWrap(serviceHolder, call))
+                    }
                     call.respond(
-                            when (val result: Any? = scriptService.parse(routeCacheService.cache[routeData.id]!!.script) {
-                                return@parse this.invokeMethod("service", ParamWrap(serviceHolder, call))
-                            }) {
-                                null -> throw RuntimeException("the script should not return null")
+                            when (result) {
+                                is Unit -> throw RuntimeException("script should not return unit")
                                 is CompletableFuture<*> -> result.await()
                                 is CompleteFuture<*> -> result.suspendAwait()
+                                null -> ""  //FILLME how to response when result is null
                                 else -> result
                             }
                     )
