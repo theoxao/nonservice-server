@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 /**
  * create by theoxao on 2019/5/24
  */
-@Component
+//@Component
 class PersistedRouteLoader(private val routeHandler: RouteHandler, private val redisTemplate: StringRedisTemplate) : RouteLoader(routeHandler) {
 
     override fun routeSupplier(): List<BaseRouteData> =

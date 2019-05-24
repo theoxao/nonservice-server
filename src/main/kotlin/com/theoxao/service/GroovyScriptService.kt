@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service
 class GroovyScriptService {
     private val shell = GroovyShell()
 
-    fun parse(scriptAsString: String, invoke: Script.() -> Any):Any {
+    fun parse(scriptAsString: String, invoke: Script.() -> Any): Any {
         val script = shell.parse(scriptAsString)
         return invoke(script)
     }
@@ -19,5 +19,10 @@ class GroovyScriptService {
     fun mapParameterScript(scriptAsString: String, methodName: String, param: Map<Any, Any>): Any {
         val script = shell.parse(scriptAsString)
         return script.invokeMethod(methodName, param)
+    }
+
+    fun preParse(rawScript: String): String {
+        //TODO do something
+        return rawScript
     }
 }

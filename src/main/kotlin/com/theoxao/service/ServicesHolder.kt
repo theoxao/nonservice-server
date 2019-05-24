@@ -2,6 +2,7 @@ package com.theoxao.service
 
 import com.theoxao.annotations.EmbeddedService
 import com.theoxao.annotations.ShylyService
+import com.theoxao.future.DelayFuture
 import com.theoxao.http.HttpClient
 import com.theoxao.wrap.HttpClientWrap
 import io.ktor.util.KtorExperimentalAPI
@@ -22,6 +23,7 @@ class ServicesHolder constructor(
         private val applicationContext: ApplicationContext,
         val mongoTemplate: MongoTemplate,
         val httpClientWrap: HttpClientWrap,
+        val delayFuture: DelayFuture,
         val httpClient: HttpClient
 ) {
     private val level = "ALL"

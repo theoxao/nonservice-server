@@ -21,12 +21,12 @@ abstract class RouteLoader(private val routeHandler: RouteHandler) {
     }
 
     private fun load() {
-        routeSupplier().forEach {
+        routeSupplier()?.forEach {
             routeHandler.addRoute(it)
         }
     }
 
-    abstract fun routeSupplier(): List<BaseRouteData>;
+    abstract fun routeSupplier(): List<BaseRouteData>?
 
 
 }

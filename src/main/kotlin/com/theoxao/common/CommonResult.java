@@ -10,6 +10,9 @@ public class CommonResult {
     private String msg = null;
     private Object data;
 
+    public CommonResult() {
+    }
+
     public CommonResult(Object data) {
         this.data = data;
     }

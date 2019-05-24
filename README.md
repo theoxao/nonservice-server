@@ -11,7 +11,17 @@ build service without rebuild/restart or republish
 
 ## Diagram
 
+### dynamic routes & services
 ![structure diagram](asset/script_as_service.png)
+
+### async solutions
+* reactive based
+
+![reactive-based-async](asset/reactive-based-async.png)
+
+* coroutine based
+
+![reactive-based-async](asset/coroutine-based-async.png)
 
 ## Asyncript
 

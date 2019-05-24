@@ -5,6 +5,7 @@ import com.theoxao.entities.RouteEntity
 import com.theoxao.repository.RouteRepository
 import com.theoxao.service.RouteCacheService
 import com.theoxao.service.RouteHandler
+import com.theoxao.service.RouteService
 import org.bson.types.ObjectId
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController
 //TODO move these route to script
 @RestController
 @RequestMapping("/")
-class ManageRoute(private val routeRepository: RouteRepository, private val routeCacheService: RouteCacheService) {
+class ManageRoute(private val routeService: RouteService, private val routeCacheService: RouteCacheService) {
     private val success = "success"
 
     @RequestMapping("/add")
@@ -28,13 +29,13 @@ class ManageRoute(private val routeRepository: RouteRepository, private val rout
         data.id = id
         data.path = path
         data.script = script
-        routeRepository.save(data)
+        routeService.addRoute(data)
         return id
     }
 
     @RequestMapping("/remove")
     fun removeRoute(id: String): String {
-        routeRepository.remove(id)
+        routeService.removeRoute(id)
         return success
     }
 

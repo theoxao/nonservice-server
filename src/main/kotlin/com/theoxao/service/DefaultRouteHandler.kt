@@ -2,6 +2,7 @@ package com.theoxao.service
 
 import com.theoxao.annotations.ShylyService
 import com.theoxao.common.BaseRouteData
+import com.theoxao.common.CommonResult
 import com.theoxao.common.Constant.ROUTE_DATA_REDIS_PREFIX
 import com.theoxao.common.ParamWrap
 import io.ktor.application.call
@@ -16,7 +17,6 @@ import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.pipeline.ContextDsl
 import io.netty.util.concurrent.CompleteFuture
 import kotlinx.coroutines.future.await
-import org.springframework.util.Assert
 import java.util.concurrent.CompletableFuture
 import kotlin.reflect.full.declaredMemberProperties
 import kotlin.reflect.jvm.javaField
@@ -56,7 +56,7 @@ class DefaultRouteHandler constructor(
                                 is Unit -> throw RuntimeException("script should not return unit")
                                 is CompletableFuture<*> -> result.await()
                                 is CompleteFuture<*> -> result.suspendAwait()
-                                null -> ""  //FILLME how to response when result is null
+                                null -> CommonResult()
                                 else -> result
                             }
                     )
