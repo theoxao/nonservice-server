@@ -10,11 +10,13 @@ import org.springframework.stereotype.Component
 /**
  * create by theoxao on 2019/5/24
  */
-//@Component
+@Component
 class InnerRouteLoader(private val mongoTemplate: MongoTemplate, private val routeHandler: RouteHandler) : RouteLoader(routeHandler) {
+    init {
+        load()
+    }
 
     override fun routeSupplier(): List<BaseRouteData>? =
             mongoTemplate.findAll(InnerRouteEntity::class.java) ?: null
-
 
 }

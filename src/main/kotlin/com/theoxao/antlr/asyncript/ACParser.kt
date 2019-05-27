@@ -1,9 +1,11 @@
 package com.theoxao.antlr.asyncript
 
+import com.theoxao.antlr.coffe.BaseParseTreeListener
 import com.theoxao.antlr.source.AsyncriptBaseListener
 import com.theoxao.antlr.source.AsyncriptLexer
 import com.theoxao.antlr.source.AsyncriptParser
 import org.antlr.v4.runtime.*
+import org.antlr.v4.runtime.tree.ParseTreeWalker
 import org.intellij.lang.annotations.Language
 import org.junit.Test
 
@@ -13,29 +15,16 @@ import org.junit.Test
  * @date 2019/5/23
  */
 //@Service
-class ACParser : AsyncriptBaseListener() {
+class ACParser {
 
 
     @Test
     fun test() {
         @Language("Groovy")
-        val script = "package com.example;\n\nimport com.theoxao.common.ParamWrap;\nimport com.theoxao.common.CommonResult;\n\nstatic CommonResult service(ParamWrap paramWrap) async{\n    List<String> result = new ArrayList<String>();\n    String localUser = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");\n    result.add(localUser);\n    String response = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");\n    def user = ObjectMapper().readValue(response, User.class);\n    result.add(user);\n    return new CommonResult(result);\n}"
+        val script = "package com.example;import com.theoxao.common.ParamWrap;import com.theoxao.common.CommonResult;static CommonResult service(ParamWrap paramWrap) async{    List<String> result = new ArrayList<String>();    String localUser = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");    result.add(localUser);    String response = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");    def user = ObjectMapper().readValue(response, User.class);    result.add(user);    return new CommonResult(result);}"
         val parser = parse(script)
         val compilationUnit = parser.compilationUnit()
-        compilationUnit.typeDeclaration().forEach {
-            it.classBodyDeclaration()
-                    .memberDeclaration()
-                    .methodDeclaration()
-                    .asyncMethodBody()
-                    .block()
-                    .blockStatement().forEach { bs ->
-                        bs.statement()
-                                .statementExpression()
-                                .expression()
-                                .awaitExpression()
-                    }
-        }
-        println(1)
+        ParseTreeWalker.DEFAULT.walk(BaseParseTreeListener(parser), compilationUnit)
     }
 
 
