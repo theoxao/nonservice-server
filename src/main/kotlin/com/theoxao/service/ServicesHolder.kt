@@ -2,14 +2,13 @@ package com.theoxao.service
 
 import com.theoxao.annotations.EmbeddedService
 import com.theoxao.annotations.ShylyService
-import com.theoxao.future.DelayFuture
+import com.theoxao.wrap.DelayFutureWrap
 import com.theoxao.http.HttpClient
 import com.theoxao.wrap.HttpClientWrap
 import io.ktor.util.KtorExperimentalAPI
 import org.springframework.context.ApplicationContext
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.redis.core.StringRedisTemplate
-import org.springframework.stereotype.Service
 
 
 /**
@@ -23,7 +22,7 @@ class ServicesHolder constructor(
         private val applicationContext: ApplicationContext,
         val mongoTemplate: MongoTemplate,
         val httpClientWrap: HttpClientWrap,
-        val delayFuture: DelayFuture,
+        val delayFuture: DelayFutureWrap,
         val httpClient: HttpClient
 ) {
     private val level = "ALL"

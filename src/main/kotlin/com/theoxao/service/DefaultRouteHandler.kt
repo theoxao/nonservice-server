@@ -55,7 +55,7 @@ class DefaultRouteHandler constructor(
                             when (result) {
                                 is Unit -> throw RuntimeException("script should not return unit")
                                 is CompletableFuture<*> -> result.await()
-                                is CompleteFuture<*> -> result.suspendAwait()
+//                                is CompleteFuture<*> -> result.suspendAwait()
                                 null -> CommonResult()
                                 else -> result
                             }

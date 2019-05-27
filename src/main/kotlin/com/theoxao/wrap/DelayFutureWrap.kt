@@ -1,4 +1,4 @@
-package com.theoxao.future
+package com.theoxao.wrap
 
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -12,7 +12,7 @@ import java.util.concurrent.CompletableFuture
  * @date 2019/5/24
  */
 @Component
-class DelayFuture {
+class DelayFutureWrap {
 
     fun futureDelay(time: Long): CompletableFuture<Unit> {
         return GlobalScope.future {
