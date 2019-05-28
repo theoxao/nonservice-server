@@ -1,0 +1,18 @@
+packageTemp(qualifiedName) ::=<<
+<if (qualifiedName)>
+package <qualifiedName>;
+<endif>
+>>
+importGroup(importHolders) ::=<<
+<importHolders:importTemp();separator="\n">
+>>
+importTemp(importHolder) ::=<<
+<if(importHolder.qualifiedName)>
+import <importHolder.qualifiedName>;
+<endif>
+>>
+typeDeclarationTemp(classOrInterfaceModifier)::=<<
+<classOrInterfaceModifier;separator=" ">
+>>
+classTemp(classDeclaration)::=""
+

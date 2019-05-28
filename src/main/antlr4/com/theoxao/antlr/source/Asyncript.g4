@@ -53,9 +53,9 @@ importDeclaration
 
 typeDeclaration
     :   classOrInterfaceModifier* classDeclaration
-    |   classOrInterfaceModifier* enumDeclaration
-    |   classOrInterfaceModifier* interfaceDeclaration
-    |   classOrInterfaceModifier* annotationTypeDeclaration
+//    |   classOrInterfaceModifier* enumDeclaration
+//    |   classOrInterfaceModifier* interfaceDeclaration
+//    |   classOrInterfaceModifier* annotationTypeDeclaration
     |   classBodyDeclaration
     |   ';'
     ;
@@ -143,7 +143,7 @@ interfaceBody
 
 classBodyDeclaration
     :   ';'
-    |   'static'? block
+//    |   'static'? block
     |   modifier* memberDeclaration
     ;
 
@@ -151,12 +151,12 @@ memberDeclaration
     :   methodDeclaration
     |   genericMethodDeclaration
     |   fieldDeclaration
-    |   constructorDeclaration
-    |   genericConstructorDeclaration
-    |   interfaceDeclaration
-    |   annotationTypeDeclaration
+//    |   constructorDeclaration
+//    |   genericConstructorDeclaration
+//    |   interfaceDeclaration
+//    |   annotationTypeDeclaration
     |   classDeclaration
-    |   enumDeclaration
+//    |   enumDeclaration
     ;
 
 /* We use rule this even for void methods which cannot have [] after parameters.
@@ -1017,7 +1017,7 @@ ELLIPSIS : '...';
 // Whitespace and comments
 //
 
-WS  :  [ \t\u000C]+ -> skip
+WS  :  [ \t\r\n\u000C]+ -> skip
     ;
 
 COMMENT

@@ -1,0 +1,15 @@
+package com.example.advance
+
+import com.theoxao.common.CommonResult
+import com.theoxao.common.ParamWrap
+import httpClient as http
+import ApplicationRequest as request
+import ApplicationResponse as myResponse
+import ApplicationCall as whoseCall
+
+static CommonResult service(ParamWrap paramWrap) async{
+    String url = request.parameters.get("url")
+    String localUser = await http.getFuture(url)
+    return new CommonResult(localUser.substring(0, 10))
+}
+
