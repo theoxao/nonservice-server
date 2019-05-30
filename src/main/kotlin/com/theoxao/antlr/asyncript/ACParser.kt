@@ -21,7 +21,7 @@ class ACParser {
     @Test
     fun test() {
         @Language("Groovy")
-        val script = "package com.example;\nimport com.theoxao.common.CommonResult;\nimport com.theoxao.common.ParamWrap;\nimport groovy.transform.Field;\nimport org.springframework.validation.annotation.Validated;\nimport org.springframework.web.bind.annotation.RequestBody;\nimport org.springframework.web.bind.annotation.RequestMapping;\n\nimport javax.xml.bind.ValidationEvent;\n\n@RequestMapping\npublic  class Foo{\n  public  static void service(@Validated ParamWrap paramWrap, String s) async {\n        @Field final List<String> result = new ArrayList<String>();\n        String localUser = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");\n        result.add(localUser);\n        String response = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");\n        def user = ObjectMapper().readValue(response, User.class); result.add(user); return new CommonResult(result);\n    }\n}\n\nstatic CommonResult service2( ParamWrap paramWrap ,@Validated String str)  {\n    List<String> result = new ArrayList<String>();\n    String localUser = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");\n    result.add(localUser);\n    String response = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");\n    def user = ObjectMapper().readValue(response, User.class); result.add(user); return new CommonResult(result);\n}\n"
+        val script = "package com.example;\nimport com.theoxao.common.CommonResult;\nimport com.theoxao.common.ParamWrap;\n\n@RequestMapping\npublic  class Foo{\n  public  static void service(@Validated ParamWrap paramWrap, String s) async {\n        @Field final List<String> result = new ArrayList<String>();\n        String localUser = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");\n        result.add(localUser);\n        String response = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");\n        def user = ObjectMapper().readValue(response, User.class); result.add(user); \n        return new CommonResult(result);\n    }\n}\n\nstatic CommonResult service2( ParamWrap paramWrap ,@Validated String str)  {\n    List<String> result = new ArrayList<String>();\n    String localUser = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");\n    result.add(localUser);\n    String response = expect paramWrap.servicesHolder.httpClient.getFuture(\"http://git.theoxao.com\");\n    def user = ObjectMapper().readValue(response, User.class); result.add(user); \n    return new CommonResult(result);\n}\n"
         val parser = parse(script)
         val compilationUnit = parser.compilationUnit()
         ParseTreeWalker.DEFAULT.walk(CoffeeBeanListener(), compilationUnit)
@@ -34,7 +34,8 @@ class ACParser {
         val tokenStream: TokenStream = CommonTokenStream(lexer)
         val parser = AsyncriptParser(tokenStream)
         parser.removeErrorListeners()
-        parser.errorHandler = BailErrorStrategy()
+        parser.addErrorListener(DiagnosticErrorListener())
+        parser.errorHandler = DefaultErrorStrategy()
         parser.addErrorListener(ConsoleErrorListener())
         return parser
     }

@@ -27,9 +27,9 @@ class BaseParseTreeListener(val parser: AsyncriptParser) : AsyncriptBaseListener
     }
 
     override fun enterImportDeclaration(ctx: AsyncriptParser.ImportDeclarationContext?) {
-        val st = stg.getInstanceOf("importTemp")
-        st.add("importHolder", CompilationUnit.ImportDeclaration(ctx?.qualifiedName()?.text))
-        code.append(st.render())
+//        val st = stg.getInstanceOf("importTemp")
+//        st.add("importHolder", CompilationUnit.ImportDeclaration(ctx?.qualifiedName()?.text))
+//        code.append(st.render())
     }
 
     override fun enterTypeDeclaration(ctx: AsyncriptParser.TypeDeclarationContext?) {

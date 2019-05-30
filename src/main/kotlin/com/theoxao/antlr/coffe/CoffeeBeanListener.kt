@@ -58,17 +58,31 @@ class CoffeeBeanListener : AsyncriptBaseListener() {
         code.append(")")
     }
 
-    override fun enterVariableModifier(ctx: AsyncriptParser.VariableModifierContext?) {
-        ctx?.let {
-            code.append("${it.text} ")
+//    override fun enterVariableModifier(ctx: AsyncriptParser.VariableModifierContext?) {
+//        ctx?.let {
+//            code.append("${it.text} ")
+//        }
+//    }
+
+    override fun enterLocalVariableDeclaration(ctx: AsyncriptParser.LocalVariableDeclarationContext?) {
+        val modifiers = ctx?.variableModifier()?.map { it.text }
+        if (modifiers != null && modifiers.isNotEmpty()) {
+            code.append("${modifiers.reduce { acc, s -> "$acc $s" }} ")
         }
+        code.append("${ctx?.typeType()?.text} ")
+
     }
 
     override fun enterVariableDeclaratorId(ctx: AsyncriptParser.VariableDeclaratorIdContext?) {
-        ctx?.Identifier()?.let {
-            code.append("${it.text} ")
-        }
+        if (ctx?.parent?.parent?.parent !is AsyncriptParser.FormalParametersContext)  //ignore since its already append in there
+            ctx?.Identifier()?.let {
+                code.append("${it.text} = ")
+            }
     }
+
+//    override fun enterVariableInitializer(ctx: AsyncriptParser.VariableInitializerContext?) {
+//        code.append(ctx?.expression()?.text?.replace("<missing WS>", ""))
+//    }
 
     override fun enterClassOrInterfaceModifier(ctx: AsyncriptParser.ClassOrInterfaceModifierContext?) {
         code.append("${ctx?.text} ")
@@ -76,6 +90,10 @@ class CoffeeBeanListener : AsyncriptBaseListener() {
 
     override fun enterAsyncMethodBody(ctx: AsyncriptParser.AsyncMethodBodyContext?) {
         code.append("{\n")
+    }
+
+    override fun exitLocalVariableDeclarationStatement(ctx: AsyncriptParser.LocalVariableDeclarationStatementContext?) {
+        code.append("\n")
     }
 
     override fun exitAsyncMethodBody(ctx: AsyncriptParser.AsyncMethodBodyContext?) {
