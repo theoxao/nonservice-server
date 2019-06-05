@@ -1,0 +1,7 @@
+ROOT=1
+TRUNK=2
+LEAF=3
+WS=4
+LINE=5
+'root'=1
+'leaf'=3
