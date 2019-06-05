@@ -1,7 +1,7 @@
 package com.theoxao.service
 
 import com.theoxao.annotations.ShylyService
-import com.theoxao.common.BaseRouteData
+import com.theoxao.entities.RouteEntity
 import com.theoxao.common.CommonResult
 import com.theoxao.common.Constant.ROUTE_DATA_REDIS_PREFIX
 import com.theoxao.common.ParamWrap
@@ -10,12 +10,10 @@ import io.ktor.http.HttpMethod
 import io.ktor.response.respond
 import io.ktor.routing.*
 import io.ktor.server.engine.ApplicationEngine
-import io.ktor.server.netty.suspendAwait
 import io.ktor.util.AttributeKey
 import io.ktor.util.Attributes
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.util.pipeline.ContextDsl
-import io.netty.util.concurrent.CompleteFuture
 import kotlinx.coroutines.future.await
 import java.util.concurrent.CompletableFuture
 import kotlin.reflect.full.declaredMemberProperties
@@ -43,13 +41,13 @@ class DefaultRouteHandler constructor(
         baseRoute = route as? Routing
     }
 
-    override fun addRoute(routeData: BaseRouteData) {
-        routeCacheService.cache[routeData.id] = routeData
+    override fun addRoute(routeEntity: RouteEntity) {
+        routeCacheService.routeCache[routeEntity.id] = routeEntity
         applicationEngine.application.routing {
-            markedRoute(routeData.path, HttpMethod(routeData.method), routeData.id) {
+            markedRoute(routeEntity.uri, HttpMethod(routeEntity.requestMethod), routeEntity.id) {
                 handle {
-                    val result: Any? = scriptService.parse(routeCacheService.cache[routeData.id]!!.script) {
-                        return@parse this.invokeMethod("service", ParamWrap(serviceHolder, call))
+                    val result: Any? = scriptService.parse(routeCacheService.routeCache[routeEntity.id]!!.script) {
+                        return@parse this.invokeMethod(routeEntity.method, ParamWrap(serviceHolder, call))
                     }
                     call.respond(
                             when (result) {

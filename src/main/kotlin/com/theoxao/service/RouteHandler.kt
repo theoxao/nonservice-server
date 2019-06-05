@@ -1,7 +1,6 @@
 package com.theoxao.service
 
-import com.theoxao.annotations.ShylyService
-import com.theoxao.common.BaseRouteData
+import com.theoxao.entities.RouteEntity
 
 
 /**
@@ -9,6 +8,6 @@ import com.theoxao.common.BaseRouteData
  */
 
 interface RouteHandler {
-    fun addRoute(routeData: BaseRouteData)
+    fun addRoute(routeEntity: RouteEntity)
     fun removeRoute(id: String)
 }

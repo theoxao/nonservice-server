@@ -1,6 +1,6 @@
 package com.theoxao
 
-import com.theoxao.common.BaseRouteData
+import com.theoxao.entities.RouteEntity
 import com.theoxao.service.DefaultRouteHandler
 import org.bson.types.ObjectId
 import org.springframework.boot.CommandLineRunner
@@ -19,7 +19,7 @@ open class Application {
     open fun runner(routeHandler: DefaultRouteHandler): CommandLineRunner {
         return CommandLineRunner {
 
-            val data = BaseRouteData()
+            val data = RouteEntity()
             data.id=ObjectId().toHexString()
             data.path="/foo"
             //language=Groovy

@@ -1,6 +1,6 @@
 package com.theoxao.packageless
 
-import com.theoxao.common.BaseRouteData
+import com.theoxao.entities.RouteEntity
 import com.theoxao.entities.InnerRouteEntity
 import com.theoxao.service.RouteHandler
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -16,7 +16,7 @@ class InnerRouteLoader(private val mongoTemplate: MongoTemplate, private val rou
         load()
     }
 
-    override fun routeSupplier(): List<BaseRouteData>? =
+    override fun routeSupplier(): List<RouteEntity>? =
             mongoTemplate.findAll(InnerRouteEntity::class.java) ?: null
 
 }

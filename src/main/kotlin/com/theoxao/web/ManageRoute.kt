@@ -1,10 +1,7 @@
 package com.theoxao.web
 
-import com.theoxao.common.BaseRouteData
 import com.theoxao.entities.RouteEntity
-import com.theoxao.repository.RouteRepository
 import com.theoxao.service.RouteCacheService
-import com.theoxao.service.RouteHandler
 import com.theoxao.service.RouteService
 import org.bson.types.ObjectId
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,12 +20,11 @@ class ManageRoute(private val routeService: RouteService, private val routeCache
     private val success = "success"
 
     @RequestMapping("/add")
-    fun addRoute(path: String, script: String): String {
+    fun addRoute(uri: String, script: String): String {
         val data = RouteEntity()
         val id = ObjectId().toHexString()
         data.id = id
-        data.path = path
-        data.script = script
+        data.uri = uri
         routeService.addRoute(data)
         return id
     }

@@ -1,6 +1,6 @@
 package com.theoxao.packageless
 
-import com.theoxao.common.BaseRouteData
+import com.theoxao.entities.RouteEntity
 import com.theoxao.service.RouteHandler
 
 
@@ -19,7 +19,7 @@ abstract class RouteLoader(private val routeHandler: RouteHandler) {
         }
     }
 
-    abstract fun routeSupplier(): List<BaseRouteData>?
+    abstract fun routeSupplier(): List<RouteEntity>?
 
 
 }

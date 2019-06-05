@@ -7,4 +7,10 @@ package com.theoxao.utils
  */
 
 class ScriptHelper {
+
+    companion object {
+
+
+    }
+
 }

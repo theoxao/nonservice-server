@@ -1,7 +1,7 @@
 package com.theoxao.packageless
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.theoxao.common.BaseRouteData
+import com.theoxao.entities.RouteEntity
 import com.theoxao.common.Constant
 import com.theoxao.service.RouteHandler
 import org.springframework.data.redis.core.StringRedisTemplate
@@ -18,10 +18,10 @@ class PersistedRouteLoader(private val routeHandler: RouteHandler, private val r
         load()
     }
 
-    override fun routeSupplier(): List<BaseRouteData> =
+    override fun routeSupplier(): List<RouteEntity> =
             redisTemplate.keys("${Constant.ROUTE_DATA_REDIS_PREFIX}*").map {
                 val routeData = redisTemplate.boundValueOps(it).get()
-                ObjectMapper().readValue<BaseRouteData>(routeData, BaseRouteData::class.java)
+                ObjectMapper().readValue<RouteEntity>(routeData, RouteEntity::class.java)
             }
 
 

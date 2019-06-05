@@ -1,14 +1,34 @@
 package com.theoxao.entities
 
-import com.theoxao.common.BaseRouteData
+import org.bson.types.ObjectId
 import org.springframework.data.mongodb.core.mapping.Document
 
 
 /**
- * @author theo
- * @date 2019/5/20
+ * create by theoxao on 2019/5/18
  */
 @Document(collection = "route_data")
-class RouteEntity : BaseRouteData() {
+open class RouteEntity {
+
+    var id = ObjectId().toHexString()
+
+    /**
+     * request uri
+     */
+    var uri: String = ""
+
+    /**
+     * request method
+     * TODO maybe support multi method for single route
+     */
+    var requestMethod: String = "GET"
+
+    var scriptId: ObjectId? = null
+
+    /**
+     * use service by default
+     */
+    var method: String = "service"
+
 
 }

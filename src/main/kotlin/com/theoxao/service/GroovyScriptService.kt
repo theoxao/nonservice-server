@@ -1,5 +1,6 @@
 package com.theoxao.service
 
+import com.theoxao.common.GroovyShellHolder
 import groovy.lang.GroovyShell
 import groovy.lang.Script
 import org.springframework.stereotype.Service
@@ -9,7 +10,7 @@ import org.springframework.stereotype.Service
  */
 @Service
 class GroovyScriptService {
-    private val shell = GroovyShell()
+    private val shell = GroovyShellHolder.shell
 
     fun parse(scriptAsString: String, invoke: Script.() -> Any): Any {
         val script = shell.parse(scriptAsString)
