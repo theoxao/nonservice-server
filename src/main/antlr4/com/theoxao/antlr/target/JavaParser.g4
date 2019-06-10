@@ -45,7 +45,7 @@ importDeclaration
 
 typeDeclaration
     : classOrInterfaceModifier*
-      (classDeclaration | enumDeclaration | interfaceDeclaration | annotationTypeDeclaration)
+      (classDeclaration/* | enumDeclaration | interfaceDeclaration | annotationTypeDeclaration*/) //not support yet
     | ';'
     ;
 
@@ -78,6 +78,7 @@ classDeclaration
       (EXTENDS typeType)?
       (IMPLEMENTS typeList)?
       classBody
+      | methodDeclaration
     ;
 
 typeParameters
@@ -146,13 +147,19 @@ memberDeclaration
 methodDeclaration
     : typeTypeOrVoid IDENTIFIER formalParameters ('[' ']')*
       (THROWS qualifiedNameList)?
-      methodBody
+      (methodBody
+      |asyncMethodBody
+      )
     ;
 
 methodBody
     : block
     | ';'
     ;
+asyncMethodBody
+    : ASYNC block
+    | ';'
+;
 
 typeTypeOrVoid
     : typeType

@@ -81,6 +81,8 @@ TRY:                'try';
 VOID:               'void';
 VOLATILE:           'volatile';
 WHILE:              'while';
+ASYNC:              'async';
+AWAIT:              'await';
 
 // Literals
 
