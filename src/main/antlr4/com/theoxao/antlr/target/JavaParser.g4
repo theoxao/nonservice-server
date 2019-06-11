@@ -45,7 +45,8 @@ importDeclaration
 
 typeDeclaration
     : classOrInterfaceModifier*
-      (classDeclaration/* | enumDeclaration | interfaceDeclaration | annotationTypeDeclaration*/) //not support yet
+      (classDeclaration | methodDeclaration /* | enumDeclaration | interfaceDeclaration | annotationTypeDeclaration*/) //not support yet
+
     | ';'
     ;
 
@@ -77,8 +78,7 @@ classDeclaration
     : CLASS IDENTIFIER typeParameters?
       (EXTENDS typeType)?
       (IMPLEMENTS typeList)?
-      classBody
-      | methodDeclaration
+      (classBody)
     ;
 
 typeParameters

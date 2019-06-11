@@ -2,7 +2,6 @@ package com.theoxao.antlr.asyncript
 
 import com.theoxao.antlr.target.JavaParser
 import com.theoxao.antlr.target.JavaParserBaseListener
-import java.lang.StringBuilder
 
 
 /**
@@ -12,13 +11,23 @@ import java.lang.StringBuilder
 class CoffeeBeanListener : JavaParserBaseListener() {
 
     private val code: StringBuilder = StringBuilder()
+    private var firstTypeParameter: Boolean = true
 
     override fun enterPackageDeclaration(ctx: JavaParser.PackageDeclarationContext?) {
         code.append("package ${ctx?.qualifiedName()?.text}")
     }
 
     override fun enterImportDeclaration(ctx: JavaParser.ImportDeclarationContext?) {
+        //TODO "." "*" are not include
         code.append("import ${ctx?.STATIC() ?: ""} ${ctx?.qualifiedName()?.text}")
+    }
+
+    override fun enterClassBody(ctx: JavaParser.ClassBodyContext?) {
+        code.append("{\n")
+    }
+
+    override fun exitClassBody(ctx: JavaParser.ClassBodyContext?) {
+        code.append("\n}")
     }
 
     override fun enterAnnotation(ctx: JavaParser.AnnotationContext?) {
@@ -33,8 +42,20 @@ class CoffeeBeanListener : JavaParserBaseListener() {
         code.append("class ${ctx?.IDENTIFIER()?.text} ")
     }
 
+    override fun enterTypeParameters(ctx: JavaParser.TypeParametersContext?) {
+        code.append("<")
+    }
+
     override fun enterTypeParameter(ctx: JavaParser.TypeParameterContext?) {
-        code.append("<${ctx?.text}>")
+        val param = ctx?.IDENTIFIER()?.text + " " + (ctx?.EXTENDS()?.text ?: "") + " " + (ctx?.typeBound()?.text ?: "")
+        code.append("${if (firstTypeParameter) "" else ","}$param")
+        this.firstTypeParameter = false
+    }
+
+
+    override fun exitTypeParameters(ctx: JavaParser.TypeParametersContext?) {
+        code.append(">")
+        this.firstTypeParameter = true
     }
 
     override fun exitTypeDeclaration(ctx: JavaParser.TypeDeclarationContext?) {
