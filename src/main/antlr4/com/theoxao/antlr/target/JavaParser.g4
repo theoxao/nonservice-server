@@ -144,7 +144,7 @@ memberDeclaration
    renders the [] matching as a context-sensitive issue or a semantic check
    for invalid return type after parsing.
  */
-methodDeclaration
+   methodDeclaration
     : typeTypeOrVoid IDENTIFIER formalParameters ('[' ']')*
       (THROWS qualifiedNameList)?
       (methodBody

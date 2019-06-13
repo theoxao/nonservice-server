@@ -2,6 +2,7 @@ package com.theoxao.antlr.asyncript
 
 import com.theoxao.antlr.target.JavaParser
 import com.theoxao.antlr.target.JavaParserBaseListener
+import org.antlr.v4.runtime.tree.TerminalNodeImpl
 
 
 /**
@@ -50,6 +51,19 @@ class CoffeeBeanListener : JavaParserBaseListener() {
         val param = ctx?.IDENTIFIER()?.text + " " + (ctx?.EXTENDS()?.text ?: "") + " " + (ctx?.typeBound()?.text ?: "")
         code.append("${if (firstTypeParameter) "" else ","}$param")
         this.firstTypeParameter = false
+    }
+
+    override fun enterMethodDeclaration(ctx: JavaParser.MethodDeclarationContext?) {
+        val type = ctx?.typeTypeOrVoid()
+        type!!.children.forEach {
+            when (it) {
+                is TerminalNodeImpl -> code.append(it.symbol.text + " ")
+                is JavaParser.TypeTypeContext -> {
+                    code.append(it.annotation()?.text ?: "" + " ")
+                    code.append("${it.primitiveType()?.text ?: " "}" + " ")
+                }
+            }
+        }
     }
 
 
