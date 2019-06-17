@@ -60,7 +60,8 @@ class CoffeeBeanListener : JavaParserBaseListener() {
                 is TerminalNodeImpl -> code.append(it.symbol.text + " ")
                 is JavaParser.TypeTypeContext -> {
                     code.append(it.annotation()?.text ?: "" + " ")
-                    code.append("${it.primitiveType()?.text ?: " "}" + " ")
+                    code.append((it.primitiveType()?.text ?: " ") + " ")
+
                 }
             }
         }
