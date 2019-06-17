@@ -19,14 +19,20 @@ class RouteService(
 ) {
     private val objectMapper = ObjectMapper()
 
+    /**
+     * route add service
+     */
     fun addRoute(route: RouteEntity) {
-        if (redisTemplate.hasKey(Constant.ROUTE_DATA_REDIS_PREFIX + route.id)) throw RuntimeException("")
+        if (redisTemplate.hasKey(Constant.ROUTE_DATA_REDIS_PREFIX + route.id)) throw RuntimeException("duplicate key ")
+        //save route info to redis; trigger redis message listener
         redisTemplate.boundValueOps(Constant.ROUTE_DATA_REDIS_PREFIX + route.id)
                 .set(objectMapper.writeValueAsString(route))     //TODO move this
+        //persist route info
         routeRepository.save(route)
     }
 
     fun removeRoute(id: String) {
+        //remove redis cache; trigger redis message listener
         redisTemplate.delete(Constant.ROUTE_DATA_REDIS_PREFIX + id)
         routeRepository.remove(id)
     }

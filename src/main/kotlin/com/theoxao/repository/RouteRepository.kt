@@ -8,12 +8,11 @@ import org.springframework.stereotype.Repository
  * @author theo
  * @date 2019/5/20
  */
-@Repository
 interface RouteRepository {
 
-    fun findById(id: String)
+    fun findById(id: String): RouteEntity?
 
-    fun findAll()
+    fun findAll(): MutableList<RouteEntity>
 
     fun save(route: RouteEntity)
 

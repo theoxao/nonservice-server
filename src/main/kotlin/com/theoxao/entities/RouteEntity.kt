@@ -30,5 +30,10 @@ open class RouteEntity {
      */
     var method: String = "service"
 
+    /**
+     * script context
+     */
+    var script: String = ""
+
 
 }

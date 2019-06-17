@@ -29,6 +29,11 @@ class ManageRoute(private val routeService: RouteService, private val routeCache
         return id
     }
 
+    @RequestMapping("/add_implicit")
+    fun addRoute(uri: String, method: String, script: String) {
+
+    }
+
     @RequestMapping("/remove")
     fun removeRoute(id: String): String {
         routeService.removeRoute(id)
@@ -36,8 +41,8 @@ class ManageRoute(private val routeService: RouteService, private val routeCache
     }
 
     @RequestMapping("/update_script")
-    fun updateRoute(id: String, script: String): String {
-        routeCacheService.updateScript(id, script)
+    fun updateRoute(id: String, scriptId: String): String {
+        routeCacheService.updateScript(id, ObjectId(scriptId))
         return success
     }
 
